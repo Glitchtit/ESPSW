@@ -1,0 +1,5 @@
+## ESPSW main component dependencies.
+dependencies:
+  idf: ">=5.4"
+  espressif/esp-zigbee-lib: "~1.6.0"
+  espressif/esp-zboss-lib: "~1.6.0"

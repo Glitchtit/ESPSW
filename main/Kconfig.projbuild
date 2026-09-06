@@ -1,0 +1,25 @@
+menu "ESPSW Configuration"
+
+config ESPSW_RELAY_GPIO
+    int "Relay module IN GPIO"
+    range 0 23
+    default 1
+    help
+        GPIO wired to the relay module's IN pin. Default 1 = XIAO ESP32-C6 pad D1.
+
+config ESPSW_RELAY_ACTIVE_LOW
+    bool "Relay module input is active-low (open-drain drive)"
+    default y
+    help
+        Most 5 V optocoupler relay modules turn ON when IN is pulled to GND.
+        When set, the GPIO is driven open-drain: sink = ON, Hi-Z = OFF.
+        Clear this for active-high modules (H/L jumper on H): push-pull, HIGH = ON.
+
+config ESPSW_LED_GPIO
+    int "Status LED GPIO (Identify blink), -1 to disable"
+    range -1 23
+    default 15
+    help
+        XIAO ESP32-C6 onboard user LED is GPIO15, active-low.
+
+endmenu

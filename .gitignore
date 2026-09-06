@@ -1,2 +1,12 @@
 # SDD / superpowers scratch workspace (ledger, briefs, review packages)
 /.superpowers/
+
+# ESP-IDF build output and local config
+/build/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+managed_components/
+
+# Host test artifacts
+/test/host/build/
