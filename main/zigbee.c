@@ -157,8 +157,10 @@ static esp_zb_cluster_list_t *build_clusters(void)
 static void on_joined(void)
 {
     s_steer_backoff_ms = 1000;
-    ESP_LOGI(TAG, "on network: pan 0x%04hx, channel %d, short 0x%04hx",
-             esp_zb_get_pan_id(), esp_zb_get_current_channel(), esp_zb_get_short_address());
+    int8_t tx_dbm = 0;
+    esp_zb_get_tx_power(&tx_dbm);
+    ESP_LOGI(TAG, "on network: pan 0x%04hx, channel %d, short 0x%04hx, tx power %d dBm",
+             esp_zb_get_pan_id(), esp_zb_get_current_channel(), esp_zb_get_short_address(), tx_dbm);
     ota_mark_valid();
     ota_start(ESPSW_ENDPOINT);
 }
@@ -244,6 +246,8 @@ static void zb_task(void *arg)
         .nwk_cfg.zczr_cfg = {.max_children = 10},
     };
     esp_zb_init(&zb_cfg);
+    /* Lower TX power trims the per-transmit current burst (~300 mA at 20 dBm). */
+    esp_zb_set_tx_power(CONFIG_ESPSW_ZB_TX_POWER_DBM);
 
     esp_zb_ep_list_t *ep_list = esp_zb_ep_list_create();
     esp_zb_endpoint_config_t ep_cfg = {

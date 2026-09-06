@@ -22,4 +22,14 @@ config ESPSW_LED_GPIO
     help
         XIAO ESP32-C6 onboard user LED is GPIO15, active-low.
 
+config ESPSW_ZB_TX_POWER_DBM
+    int "Zigbee transmit power (dBm)"
+    range -24 20
+    default 10
+    help
+        802.15.4 TX power. The C6 default is 20 dBm, which draws ~300 mA bursts at 5 V
+        during every transmit (link status every 15 s as a Router). 10 dBm cuts that
+        by roughly a third and is plenty indoors. Lower it when a weak supply shows
+        dips in sync with Zigbee traffic; raise it if link quality suffers.
+
 endmenu
