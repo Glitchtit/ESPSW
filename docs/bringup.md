@@ -7,6 +7,8 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 - [ ] `idf.py -p /dev/ttyACM0 flash monitor` succeeds.
 - [ ] Log shows `startup mode 0xff, last 0 -> boot 0` and `relay OFF`; no relay click.
 - [ ] Log shows `factory new; starting network steering`.
+- [ ] No `ESP_ERROR_CHECK` abort in the first console lines — in particular
+      `esp_zb_on_off_cluster_add_attr` for StartUpOnOff (`0x4003`) returned `ESP_OK`.
 
 ## 2. Pair with Zigbee2MQTT
 
@@ -22,8 +24,15 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 
 - [ ] HA switch ON → relay clicks, log `relay ON`, HA state ON.
 - [ ] HA switch OFF → relay releases, log `relay OFF`, HA state OFF.
+- [ ] The device log's `boot N` state (from step 1) equals Z2M's first reported state
+      right after pairing — confirms the stack did not itself re-apply StartUpOnOff to
+      the OnOff attribute.
 
 ## 4. Power-on behaviour (pull USB, replug for each)
+
+This table applies to USB power cuts only. A soft reset (OTA update, "Remove device",
+a crash/panic reboot) keeps the last state by design — StartUpOnOff is only applied
+on `ESP_RST_POWERON` / `ESP_RST_BROWNOUT` / `ESP_RST_UNKNOWN`.
 
 | select value | relay before cut | expected after replug |
 |--------------|------------------|-----------------------|
@@ -45,12 +54,12 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 
 ## 7. OTA
 
-- [ ] Bump `ESPSW_FW_VERSION` to `0x00010001`, build, run `tools/make_ota.py`, commit and
+- [ ] Bump `ESPSW_FW_VERSION` to `0x00010100`, build, run `tools/make_ota.py`, commit and
       push `z2m/ota/`.
 - [ ] Z2M is configured to serve the index (see below). OTA → Check shows an update.
 - [ ] Update → device logs `OTA start`, then `OTA complete, rebooting`; after rejoin
-      `new image confirmed valid (rollback cancelled)` and `fw 0x00010001`.
-- [ ] Power cycle → still on `0x00010001`.
+      `new image confirmed valid (rollback cancelled)` and `fw 0x00010100`.
+- [ ] Power cycle → still on `0x00010100`.
 
 ## Sharing the Z2M OTA index with ESPIR
 

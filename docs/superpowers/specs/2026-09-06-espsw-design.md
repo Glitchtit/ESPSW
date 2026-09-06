@@ -118,6 +118,8 @@ NVS wear budget is irrelevant at this rate).
     steering with backoff 1 s → 2 s → … capped at 60 s, forever.
   - `ZDO_SIGNAL_LEAVE` → `esp_zb_factory_reset()` (wipes `zb_storage`) and reboot;
     the next boot steers again. This is the factory-reset path ("Remove device" in Z2M).
+    A REJOIN-type leave (`ESP_ZB_NWK_LEAVE_TYPE_REJOIN`) is left to the stack instead —
+    only other leave types trigger the factory reset.
   - Identify: `esp_zb_identify_notify_handler_register` toggles the LED at 2 Hz while
     identify time > 0.
 - The `OnOff` attribute is seeded with the resolved boot state before `esp_zb_start`, so
@@ -131,10 +133,13 @@ NVS wear budget is irrelevant at this rate).
 finish, then `esp_restart`. `ota_mark_valid` calls `esp_ota_mark_app_valid_cancel_rollback`
 once joined so a broken image that cannot join rolls back automatically.
 
-**`main`** — `nvs_flash_init` → `store_load` → `startup_resolve` → `relay_init` +
-`relay_set(boot_state)` → `store_save_state(boot_state)` (matters for `toggle` mode) →
-`zigbee_start(boot_state)`. The relay is asserted before the Zigbee stack, so it settles
-well under 100 ms after power returns.
+**`main`** — `nvs_flash_init` → `store_load` → `startup_resolve` (power-on resets only,
+gated on `esp_reset_reason()` being `ESP_RST_POWERON`, `ESP_RST_BROWNOUT` or
+`ESP_RST_UNKNOWN`; any other reset reason keeps the stored last state unchanged, since
+ZCL StartUpOnOff is defined for power-on only) → `relay_init` + `relay_set(boot_state)`
+→ `store_save_state(boot_state)` (matters for `toggle` mode) → `zigbee_start(boot_state)`.
+The relay is asserted before the Zigbee stack, so it settles well under 100 ms after
+power returns.
 
 ### Identity constants (`proto.h`)
 
