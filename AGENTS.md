@@ -25,6 +25,7 @@ idf.py fullclean               # after major config changes
 
 ```sh
 make -C test/host              # pure-logic unit tests, no IDF needed
+python tools/test_make_ota.py  # make_ota.py self-test, no IDF and no extra packages
 ```
 
 Hardware checklist: `docs/bringup.md`.
@@ -45,7 +46,7 @@ it — change one, change all.
 ## OTA release
 
 1. Bump `ESPSW_FW_VERSION` in `main/proto.h` (packed `0xMMmmppbb`; v0.1.0 → v0.1.1 is
-   `0x00010000` → `0x00010001`).
+   `0x00010000` → `0x00010100`).
 2. `idf.py build`
 3. ```sh
    python tools/make_ota.py --bin build/espsw.bin --proto main/proto.h \
