@@ -56,10 +56,10 @@ on `ESP_RST_POWERON` / `ESP_RST_BROWNOUT` / `ESP_RST_UNKNOWN` / `ESP_RST_USB` (a
 
 ## 7. OTA
 
-- [ ] Bump `ESPSW_FW_VERSION` to `0x00010100`, build, run `tools/make_ota.py`, commit and
+- [x] Bump `ESPSW_FW_VERSION` to `0x00010100`, build, run `tools/make_ota.py`, commit and
       push `z2m/ota/`.
-- [ ] Z2M is configured to serve the index (see below). OTA → Check shows an update.
-- [ ] Update → device logs `OTA start`, then `OTA complete, rebooting`; after rejoin
+- [x] Z2M is configured to serve the index (see below). OTA → Check shows an update.
+- [x] Update → device logs `OTA start`, then `OTA complete, rebooting`; after rejoin
       `new image confirmed valid (rollback cancelled)` and `fw 0x00010100`.
 - [ ] Power cycle → still on `0x00010100`.
 
