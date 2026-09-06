@@ -10,3 +10,6 @@ managed_components/
 
 # Host test artifacts
 /test/host/build/
+
+# Python bytecode from tools/test_make_ota.py
+__pycache__/
