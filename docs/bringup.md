@@ -4,27 +4,27 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 
 ## 1. Flash and boot
 
-- [ ] `idf.py -p /dev/ttyACM0 flash monitor` succeeds.
-- [ ] Log shows `power-on: applying startup mode 0xff, last 0 -> boot 0` and `relay OFF`; no relay click.
-- [ ] Log shows `factory new; starting network steering`.
-- [ ] No `ESP_ERROR_CHECK` abort in the first console lines — in particular
+- [x] `idf.py -p /dev/ttyACM0 flash monitor` succeeds.
+- [x] Log shows `power-on: applying startup mode 0xff, last 0 -> boot 0` and `relay OFF`; no relay click.
+- [x] Log shows `factory new; starting network steering`.
+- [x] No `ESP_ERROR_CHECK` abort in the first console lines — in particular
       `esp_zb_on_off_cluster_add_attr` for StartUpOnOff (`0x4003`) returned `ESP_OK`.
 
 ## 2. Pair with Zigbee2MQTT
 
-- [ ] `z2m/espsw.js` is in `<z2m-data>/external_converters/`; Z2M log says
+- [x] `z2m/espsw.js` is in `<z2m-data>/external_converters/`; Z2M log says
       `loaded external converter`.
-- [ ] Note: on this setup Z2M's data dir is on the Unraid NAS and `external_converters/`
+- [x] Note: on this setup Z2M's data dir is on the Unraid NAS and `external_converters/`
       is root-owned over NFS — copy the file from the Unraid side (or the HA file
       editor), not from a workstation NFS mount.
-- [ ] Permit join → device log `joined network successfully`; Z2M shows `ESPSW-1CH`.
-- [ ] HA has `switch.<name>` and `select.<name>_power_on_behavior`.
+- [x] Permit join → device log `joined network successfully`; Z2M shows `ESPSW-1CH`.
+- [x] HA has `switch.<name>` and `select.<name>_power_on_behavior`.
 
 ## 3. Switching
 
-- [ ] HA switch ON → relay clicks, log `relay ON`, HA state ON.
-- [ ] HA switch OFF → relay releases, log `relay OFF`, HA state OFF.
-- [ ] The device log's `boot N` state (from step 1) equals Z2M's first reported state
+- [x] HA switch ON → relay clicks, log `relay ON`, HA state ON.
+- [x] HA switch OFF → relay releases, log `relay OFF`, HA state OFF.
+- [x] The device log's `boot N` state (from step 1) equals Z2M's first reported state
       right after pairing — confirms the stack did not itself re-apply StartUpOnOff to
       the OnOff attribute.
 
@@ -42,10 +42,12 @@ on `ESP_RST_POWERON` / `ESP_RST_BROWNOUT` / `ESP_RST_UNKNOWN` / `ESP_RST_USB` (a
 | previous     | ON               | ON                    |
 
 - [ ] All four rows pass and HA state matches the relay after rejoin.
+      (2026-09-06: `on` verified via a USB-JTAG reset — relay boots ON and HA follows; the
+      other three rows and a true USB power cut are still untested.)
 
 ## 5. Identify
 
-- [ ] Z2M → Identify: onboard LED blinks at 2 Hz for the identify time, then stops.
+- [x] Z2M → Identify: onboard LED blinks at 2 Hz for the identify time, then stops.
 
 ## 6. Factory reset via Z2M
 
