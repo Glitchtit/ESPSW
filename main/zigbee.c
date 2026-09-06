@@ -7,13 +7,11 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_timer.h"
-#include "esp_system.h"
 #include "esp_zigbee_core.h"
 #include "sdkconfig.h"
 
 #include "proto.h"
 #include "relay.h"
-#include "startup.h"
 #include "store.h"
 #include "ota.h"
 
@@ -25,7 +23,6 @@ static const char *TAG = "zigbee";
 
 static bool     s_initial_on_off;
 static uint8_t  s_startup_attr;     /* ZCL StartUpOnOff storage */
-static bool     s_joined;
 static uint32_t s_steer_backoff_ms = 1000;
 
 /* --- Identify LED --- */
@@ -135,8 +132,8 @@ static esp_zb_cluster_list_t *build_clusters(void)
     static uint8_t model[1 + 32];
     zcl_string(manuf, ESPSW_MANUF_NAME);
     zcl_string(model, ESPSW_MODEL);
-    esp_zb_basic_cluster_add_attr(basic, ESP_ZB_ZCL_ATTR_BASIC_MANUFACTURER_NAME_ID, manuf);
-    esp_zb_basic_cluster_add_attr(basic, ESP_ZB_ZCL_ATTR_BASIC_MODEL_IDENTIFIER_ID, model);
+    ESP_ERROR_CHECK(esp_zb_basic_cluster_add_attr(basic, ESP_ZB_ZCL_ATTR_BASIC_MANUFACTURER_NAME_ID, manuf));
+    ESP_ERROR_CHECK(esp_zb_basic_cluster_add_attr(basic, ESP_ZB_ZCL_ATTR_BASIC_MODEL_IDENTIFIER_ID, model));
 
     esp_zb_identify_cluster_cfg_t identify_cfg = {.identify_time = 0};
     esp_zb_attribute_list_t *identify = esp_zb_identify_cluster_create(&identify_cfg);
@@ -159,7 +156,6 @@ static esp_zb_cluster_list_t *build_clusters(void)
 
 static void on_joined(void)
 {
-    s_joined = true;
     s_steer_backoff_ms = 1000;
     ESP_LOGI(TAG, "on network: pan 0x%04hx, channel %d, short 0x%04hx",
              esp_zb_get_pan_id(), esp_zb_get_current_channel(), esp_zb_get_short_address());
@@ -195,8 +191,7 @@ void esp_zb_app_signal_handler(esp_zb_app_signal_t *signal_struct)
             }
         } else {
             ESP_LOGW(TAG, "commissioning init failed (%s); retrying", esp_err_to_name(err_status));
-            esp_zb_scheduler_alarm((esp_zb_callback_t)start_steering,
-                                   ESP_ZB_BDB_MODE_INITIALIZATION, 1000);
+            esp_zb_scheduler_alarm(start_steering, ESP_ZB_BDB_MODE_INITIALIZATION, 1000);
         }
         break;
     case ESP_ZB_BDB_SIGNAL_STEERING:
@@ -205,8 +200,8 @@ void esp_zb_app_signal_handler(esp_zb_app_signal_t *signal_struct)
             on_joined();
         } else {
             ESP_LOGW(TAG, "steering failed; retrying in %u ms", (unsigned)s_steer_backoff_ms);
-            esp_zb_scheduler_alarm((esp_zb_callback_t)start_steering,
-                                   ESP_ZB_BDB_MODE_NETWORK_STEERING, s_steer_backoff_ms);
+            esp_zb_scheduler_alarm(start_steering, ESP_ZB_BDB_MODE_NETWORK_STEERING,
+                                   s_steer_backoff_ms);
             s_steer_backoff_ms *= 2;
             if (s_steer_backoff_ms > STEER_BACKOFF_MAX_MS) {
                 s_steer_backoff_ms = STEER_BACKOFF_MAX_MS;

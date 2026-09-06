@@ -9,6 +9,5 @@
  * left OFF after init. */
 void relay_init(int gpio, bool active_low);
 void relay_set(bool on);
-bool relay_get(void);
 
 #endif /* ESPSW_RELAY_H */

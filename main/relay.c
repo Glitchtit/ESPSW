@@ -7,13 +7,11 @@ static const char *TAG = "relay";
 
 static int  s_gpio = -1;
 static bool s_active_low;
-static bool s_on;
 
 void relay_init(int gpio, bool active_low)
 {
     s_gpio = gpio;
     s_active_low = active_low;
-    s_on = false;
 
     gpio_config_t cfg = {
         .pin_bit_mask = 1ULL << gpio,
@@ -35,13 +33,7 @@ void relay_set(bool on)
     if (s_gpio < 0) {
         return;
     }
-    s_on = on;
     /* active-low: ON = sink (0), OFF = Hi-Z (1). active-high: ON = 1, OFF = 0. */
     gpio_set_level(s_gpio, s_active_low ? !on : on);
     ESP_LOGI(TAG, "relay %s", on ? "ON" : "OFF");
-}
-
-bool relay_get(void)
-{
-    return s_on;
 }
