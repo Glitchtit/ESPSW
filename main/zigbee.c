@@ -216,10 +216,15 @@ void esp_zb_app_signal_handler(esp_zb_app_signal_t *signal_struct)
     case ESP_ZB_ZDO_SIGNAL_LEAVE: {
         /* Coordinator removed us ("Remove device" in Z2M) or a local reset finished.
          * Wipe zb_storage and reboot; the next boot is factory-new and steers again.
-         * The relay keeps its stored state across this. */
+         * The relay keeps its stored state across this. A leave-with-rejoin (used by
+         * the stack itself, e.g. during a network address change) must not be treated
+         * as a factory reset — let the stack rejoin on its own. */
         const esp_zb_zdo_signal_leave_params_t *p = esp_zb_app_signal_get_params(p_sg_p);
+        if (p && p->leave_type == ESP_ZB_NWK_LEAVE_TYPE_REJOIN) {
+            ESP_LOGI(TAG, "leave-with-rejoin; letting the stack rejoin");
+            break;
+        }
         ESP_LOGW(TAG, "left network (type %u); factory reset + reboot", p ? p->leave_type : 0);
-        s_joined = false;
         esp_zb_factory_reset(); /* erases zb_storage and restarts */
         break;
     }

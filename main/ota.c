@@ -71,6 +71,9 @@ esp_err_t ota_handle_value(const void *message)
         uint16_t len = m->payload_size;
         if (s_first_block) {            /* skip sub-element tag(2)+length(4) */
             if (len < 6) {
+                ESP_LOGW(TAG, "OTA first block too short (%u bytes); aborting", len);
+                esp_ota_abort(s_handle);
+                s_in_progress = false;
                 ret = ESP_FAIL;
                 break;
             }
@@ -79,6 +82,11 @@ esp_err_t ota_handle_value(const void *message)
             s_first_block = false;
         }
         ret = esp_ota_write(s_handle, data, len);
+        if (ret != ESP_OK) {
+            ESP_LOGW(TAG, "OTA block write failed (%s); aborting", esp_err_to_name(ret));
+            esp_ota_abort(s_handle);
+            s_in_progress = false;
+        }
         break;
     }
 
