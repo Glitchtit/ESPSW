@@ -15,6 +15,7 @@
 #include "relay.h"
 #include "startup.h"
 #include "store.h"
+#include "ota.h"
 
 static const char *TAG = "zigbee";
 
@@ -101,7 +102,8 @@ static esp_err_t zb_action_handler(esp_zb_core_action_callback_id_t cb_id, const
         }
         break;
     }
-    /* OTA: Task 6 adds ESP_ZB_CORE_OTA_UPGRADE_VALUE_CB_ID -> ota_handle_value(msg) here. */
+    case ESP_ZB_CORE_OTA_UPGRADE_VALUE_CB_ID:
+        return ota_handle_value(msg);
     default:
         ESP_LOGD(TAG, "unhandled action 0x%x", cb_id);
         break;
@@ -149,7 +151,7 @@ static esp_zb_cluster_list_t *build_clusters(void)
     esp_zb_cluster_list_add_basic_cluster(cl, basic, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
     esp_zb_cluster_list_add_identify_cluster(cl, identify, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
     esp_zb_cluster_list_add_on_off_cluster(cl, on_off, ESP_ZB_ZCL_CLUSTER_SERVER_ROLE);
-    /* OTA: Task 6 adds esp_zb_cluster_list_add_ota_cluster(cl, ota_cluster_create(), CLIENT_ROLE). */
+    esp_zb_cluster_list_add_ota_cluster(cl, ota_cluster_create(), ESP_ZB_ZCL_CLUSTER_CLIENT_ROLE);
     return cl;
 }
 
@@ -161,7 +163,8 @@ static void on_joined(void)
     s_steer_backoff_ms = 1000;
     ESP_LOGI(TAG, "on network: pan 0x%04hx, channel %d, short 0x%04hx",
              esp_zb_get_pan_id(), esp_zb_get_current_channel(), esp_zb_get_short_address());
-    /* OTA: Task 6 adds ota_mark_valid(); ota_start(ESPSW_ENDPOINT); here. */
+    ota_mark_valid();
+    ota_start(ESPSW_ENDPOINT);
 }
 
 static void start_steering(uint8_t mode_mask)

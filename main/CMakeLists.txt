@@ -5,6 +5,7 @@ idf_component_register(
         "relay.c"
         "store.c"
         "zigbee.c"
+        "ota.c"
     INCLUDE_DIRS "."
     REQUIRES
         nvs_flash

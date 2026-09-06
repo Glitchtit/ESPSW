@@ -1,0 +1,11 @@
+[
+  {
+    "fileVersion": 65536,
+    "fileSize": 606942,
+    "manufacturerCode": 4151,
+    "imageType": 16,
+    "sha512": "4870b662eb8c803aa51948d6d574ac43fe371f742b90ca8485b4d8f5ea4fc6afd75155c85288b93272fd284e759e5db334a9bc3b6446db8927f17a31b47acc58",
+    "url": "https://raw.githubusercontent.com/Glitchtit/ESPSW/main/z2m/ota/espsw.ota",
+    "modelId": "ESPSW-1CH"
+  }
+]
