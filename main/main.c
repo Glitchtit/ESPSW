@@ -8,6 +8,7 @@
 #include "relay.h"
 #include "startup.h"
 #include "store.h"
+#include "zigbee.h"
 
 static const char *TAG = "espsw";
 
@@ -28,4 +29,7 @@ void app_main(void)
     if (boot_state != last) {
         store_set_state(boot_state);
     }
+
+    zigbee_start(boot_state);
+    ESP_LOGI(TAG, "ready");
 }
