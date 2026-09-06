@@ -13,7 +13,7 @@
 #define ESPSW_OTA_IMAGE_TYPE  0x0010u
 
 /* Firmware version, packed 0xMMmmppbb (major, minor, patch, build). Bump per release. */
-#define ESPSW_FW_VERSION      0x00010000u
+#define ESPSW_FW_VERSION      0x00010100u
 
 #define ESPSW_MANUF_NAME      "ESPSW"
 #define ESPSW_MODEL           "ESPSW-1CH"

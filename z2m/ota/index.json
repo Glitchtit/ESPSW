@@ -1,10 +1,10 @@
 [
   {
-    "fileVersion": 65536,
-    "fileSize": 606942,
+    "fileVersion": 65792,
+    "fileSize": 608094,
     "manufacturerCode": 4151,
     "imageType": 16,
-    "sha512": "4870b662eb8c803aa51948d6d574ac43fe371f742b90ca8485b4d8f5ea4fc6afd75155c85288b93272fd284e759e5db334a9bc3b6446db8927f17a31b47acc58",
+    "sha512": "e226fd1cfea72ab673b997bcc620acbbd542eea27bdee54191edd184b9843118ed17997a02d5b0c7ec29448ce3ab844f677b4c2624333d940d985cac3fb5e29f",
     "url": "https://raw.githubusercontent.com/Glitchtit/ESPSW/main/z2m/ota/espsw.ota",
     "modelId": "ESPSW-1CH"
   }
