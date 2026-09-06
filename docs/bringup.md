@@ -5,7 +5,7 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 ## 1. Flash and boot
 
 - [ ] `idf.py -p /dev/ttyACM0 flash monitor` succeeds.
-- [ ] Log shows `startup mode 0xff, last 0 -> boot 0` and `relay OFF`; no relay click.
+- [ ] Log shows `power-on: applying startup mode 0xff, last 0 -> boot 0` and `relay OFF`; no relay click.
 - [ ] Log shows `factory new; starting network steering`.
 - [ ] No `ESP_ERROR_CHECK` abort in the first console lines — in particular
       `esp_zb_on_off_cluster_add_attr` for StartUpOnOff (`0x4003`) returned `ESP_OK`.
@@ -32,7 +32,7 @@ Tick each item on real hardware. Console: `idf.py -p /dev/ttyACM0 monitor`.
 
 This table applies to USB power cuts only. A soft reset (OTA update, "Remove device",
 a crash/panic reboot) keeps the last state by design — StartUpOnOff is only applied
-on `ESP_RST_POWERON` / `ESP_RST_BROWNOUT` / `ESP_RST_UNKNOWN`.
+on `ESP_RST_POWERON` / `ESP_RST_BROWNOUT` / `ESP_RST_UNKNOWN` / `ESP_RST_USB` (a USB reflash therefore counts as a power cycle).
 
 | select value | relay before cut | expected after replug |
 |--------------|------------------|-----------------------|

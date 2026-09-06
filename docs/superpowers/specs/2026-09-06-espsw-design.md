@@ -134,8 +134,8 @@ finish, then `esp_restart`. `ota_mark_valid` calls `esp_ota_mark_app_valid_cance
 once joined so a broken image that cannot join rolls back automatically.
 
 **`main`** — `nvs_flash_init` → `store_load` → `startup_resolve` (power-on resets only,
-gated on `esp_reset_reason()` being `ESP_RST_POWERON`, `ESP_RST_BROWNOUT` or
-`ESP_RST_UNKNOWN`; any other reset reason keeps the stored last state unchanged, since
+gated on `esp_reset_reason()` being `ESP_RST_POWERON`, `ESP_RST_BROWNOUT`,
+`ESP_RST_UNKNOWN` or `ESP_RST_USB`; any other reset reason keeps the stored last state unchanged, since
 ZCL StartUpOnOff is defined for power-on only) → `relay_init` + `relay_set(boot_state)`
 → `store_save_state(boot_state)` (matters for `toggle` mode) → `zigbee_start(boot_state)`.
 The relay is asserted before the Zigbee stack, so it settles well under 100 ms after

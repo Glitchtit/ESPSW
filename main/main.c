@@ -14,10 +14,14 @@
 static const char *TAG = "espsw";
 
 /* ZCL's StartUpOnOff is defined for power-on only; a software restart (OTA,
- * factory reset, panic reboot) must keep whatever state was last stored. */
+ * factory reset, panic reboot) must keep whatever state was last stored. A reset
+ * issued through the native USB-Serial-JTAG peripheral (ESP_RST_USB) is what
+ * `idf.py flash` produces on the XIAO ESP32-C6, so a reflash is treated as a fresh
+ * start too: StartUpOnOff is applied and the boot log shows it. */
 static bool is_power_cycle(esp_reset_reason_t reason)
 {
-    return reason == ESP_RST_POWERON || reason == ESP_RST_BROWNOUT || reason == ESP_RST_UNKNOWN;
+    return reason == ESP_RST_POWERON || reason == ESP_RST_BROWNOUT || reason == ESP_RST_UNKNOWN ||
+           reason == ESP_RST_USB;
 }
 
 void app_main(void)
