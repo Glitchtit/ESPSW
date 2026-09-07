@@ -34,7 +34,7 @@ Hardware checklist: `docs/bringup.md`.
 
 `sdkconfig.defaults` holds the curated defaults (router role, custom partitions,
 rollback). Project knobs under **ESPSW Configuration** in `idf.py menuconfig`:
-relay GPIO, relay active-low, LED GPIO, Zigbee TX power (default 10 dBm; see README).
+relay GPIO, relay active-low, LED GPIO, Zigbee TX power (default 20 dBm; see README).
 
 ## Identity contract
 

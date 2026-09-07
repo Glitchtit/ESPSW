@@ -43,9 +43,9 @@ idf.py -p /dev/ttyACM0 flash monitor
 ```
 
 Pins and relay polarity: `idf.py menuconfig` → **ESPSW Configuration**.
-Zigbee transmit power lives there too (`ESPSW_ZB_TX_POWER_DBM`, default 10 dBm): each
-transmit is a ~300 mA burst at 20 dBm, and a weak 12 V supply shows it as an LED dip every
-15 s; lower the value before blaming the wiring, raise it only if link quality suffers.
+Zigbee transmit power lives there too (`ESPSW_ZB_TX_POWER_DBM`, default 20 dBm): each
+transmit is a ~300 mA burst, and a weak supply shows it as an LED dip every 15 s. Fit
+1000 µF or more on the 12 V rail first; drop to ~10 dBm only if that is not enough.
 
 ## Host tests
 
